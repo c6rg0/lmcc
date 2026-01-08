@@ -8,4 +8,4 @@ description = "Little man's computer collection"
 
 [[bin]]
 name = "lmcc"
-path = "lmcc.rs"
+path = "src/lmcc.rs"

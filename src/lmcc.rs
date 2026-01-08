@@ -1,7 +1,6 @@
 // use std::io;
 use std::env;
-use std::fs;
-use regex::Regex;
+// use std::fs;
 
 // Goals:
 // Read opcode, operand
@@ -10,15 +9,19 @@ fn main() {
     let args: Vec<String> = env::args().collect();
     
     if args.len() < 2 {
+        println!("No command provided");
         options();
+        return;
     }
 
-    match args[1].as_str() {
-        "-e" => emulate(),
-        "-a" => assemble(),
-        _ => {
-            println!("Unkown command: {}", args[1]);
-            options();
+    if !args[1].is_empty() {
+        match args[1].as_str() {
+            "-e" => emulate(),
+            "-a" => assemble(),
+            _ => {
+                println!("Unkown command: {}", args[1]);
+                options();
+            }
         }
     }
 }
@@ -46,6 +49,27 @@ fn assemble(){
 }
 
 fn lexical_analysis(){
+    // let contents = fs::read_to_string(file_path)
+    //     .expect("Error (I think anyway lol)");
+
+    let instr = "ADD R2 R1 10 HALT";
+    println!("{instr}");
+
+    // Tokenization occurs
+    let tokens: Vec<&str> = instr.split_whitespace().collect();
+    println!("{}", tokens[0]); // "ADD"
+    println!("{}", tokens[1]); // "R2"
+    println!("{}", tokens[2]); // "R1"
+    println!("{}", tokens[3]); // "10"
+    println!("{}", tokens[4]); // "HALT"
+
+    parser(tokens);
+
+}
+
+
+fn parser(tokens: Vec<&str>){
+    println!();
 
     // ARCH:
     // LDR RResult <memory ref>
@@ -65,32 +89,15 @@ fn lexical_analysis(){
     // LSL RResult RAgainst <operand>
     // LSR RResult RAgainst <operand>
     //
-    // The analyzer will look at the first keyword (ex. ADD) 
-    // and then will pull in the expected length of the 
-    // instruction until HOLT is met. 
+    // The static analyzer will look at the first keyword 
+    // (ex. ADD) and then will pull in the expected length 
+    // of the instruction until HOLT is met. 
+    //
 
-    let contents = fs::read_to_string(file_path)
-        .expect("Error (I think anyway lol)");
     
-    println!("{contents}");
 
-    let instr = "ADD R2 R1 10 HALT";
-    let HALT = false;
-
-    while HALT == false{    
-        // Look at first keyword
-        // Determine expression length
-        // Tokenization occurs
-        // Loop
-        // HALT
-
-        
-
-    }
-
-}
-
-fn parser(){
+    // loop through each instruction
+    // compare against arch
 
 }
 
