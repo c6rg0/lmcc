@@ -1,6 +1,7 @@
-// use std::io;
 use std::env;
-// use std::fs;
+use std::collections::HashMap;
+use std::fs;
+// use std::io;
 
 // Goals:
 // Read opcode, operand
@@ -15,15 +16,29 @@ fn main() {
     }
 
     if !args[1].is_empty() {
-        match args[1].as_str() {
-            "-e" => emulate(),
-            "-a" => assemble(),
-            _ => {
-                println!("Unkown command: {}", args[1]);
-                options();
+        if !args[2].is_empty() {
+            let f_path: String = args[2].clone();
+            match args[1].as_str() {
+                "-e" => emulate(f_path),
+                "-a" => assemble(f_path),
+                _ => {
+                    println!("Unkown command: {}", args[1]);
+                    options();
+                }
+            }
+        } else {
+            let f_path: String = String::new();
+            match args[1].as_str() {
+                "-e" => emulate(f_path),
+                "-a" => assemble(f_path),
+                _ => {
+                    println!("Unkown command: {}", args[1]);
+                    options();
+                }
             }
         }
     }
+
 }
 
 fn options() {
@@ -39,38 +54,56 @@ fn options() {
     println!();
 }
 
-fn emulate(){
+// The underscore before "f_path" shows the compiler that 
+// the unused variable is intentional.
+fn emulate(_f_path: String){ 
     println!("Emulator");
 }
 
-fn assemble(){
+fn assemble(_f_path: String){
     println!("Assembler");
-    lexical_analysis();
+    tokenization(_f_path);
 }
 
-fn lexical_analysis(){
-    // let contents = fs::read_to_string(file_path)
-    //     .expect("Error (I think anyway lol)");
+fn tokenization(f_path: String){
+    let f_contents = fs::read_to_string(f_path)
+         .expect("Error (I think anyway lol)");
 
-    let instr = "ADD R2 R1 10 HALT";
-    println!("{instr}");
+    let bin: String;
+
+    if !f_contents.is_empty(){
+        bin = f_contents;
+    } 
+    else {
+        bin = "ADD R2 R1 10 HALT".to_string();
+    }
+
+    println!("{bin}");
 
     // Tokenization occurs
-    let tokens: Vec<&str> = instr.split_whitespace().collect();
-    println!("{}", tokens[0]); // "ADD"
-    println!("{}", tokens[1]); // "R2"
-    println!("{}", tokens[2]); // "R1"
-    println!("{}", tokens[3]); // "10"
-    println!("{}", tokens[4]); // "HALT"
 
-    parser(tokens);
+    enum _Token {
+        Mnemonic(String),
+        AdressStore(String),
+        AdressToUse(String),
+        ValueToUse(u32),
+    }
+
+    // let mut tokens = Vec::new();
+
+    for word in bin.split_whitespace(){
+        println!("{word}");
+    }
+
+    parser();
 
 }
 
-
-fn parser(tokens: Vec<&str>){
-    println!();
-
+fn parser() {
+    
+    // SYMBOL TABLE
+    let mut _s_table: HashMap<String, Vec<i32>> = HashMap::new();
+    
     // ARCH:
     // LDR RResult <memory ref>
     // STR RResult <memory ref>
@@ -94,12 +127,9 @@ fn parser(tokens: Vec<&str>){
     // of the instruction until HOLT is met. 
     //
 
-    
-
     // loop through each instruction
     // compare against arch
 
+
 }
-
-
 
